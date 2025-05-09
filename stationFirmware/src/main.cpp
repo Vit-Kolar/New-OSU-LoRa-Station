@@ -684,7 +684,7 @@ void processDownlink(){
             if (spsStabilizationPreReadoutDelay > sendIntervalMinutes) {
               spsStabilizationPreReadoutDelay = sendIntervalMinutes;
             }else if(spsStabilizationPreReadoutDelay < 1){
-              spsStabilizationPreReadoutDelay = SPS30_MIN_STABILIZATION_TIME; 
+              spsStabilizationPreReadoutDelay = SPS30_DEFAULT_STABILIZATION_TIME; 
             }
           }else if(payload == 0){
             spsStopAfterReadout = 0; // do not stop the SPS30

@@ -17,7 +17,7 @@
 //Timekeeping
 const uint32_t GPS_TO_UNIX_OFFSET = 315964800UL;
 #define TIMEZONE_OFFSET_HOURS   2  // UTC+2 central european time
-#define USE_HW_RTC 0 // 1 = use hardware RTC, 0 = use software RTC 
+#define USE_HW_RTC 1 // 1 = use hardware RTC, 0 = use software RTC 
 
 
 #if USE_HW_RTC
@@ -51,7 +51,7 @@ const uint32_t GPS_TO_UNIX_OFFSET = 315964800UL;
 
 
 
-#define SPS30_MIN_STABILIZATION_TIME 3 // in minutes - time for the SPS30 to stabilize before data readout
+#define SPS30_DEFAULT_STABILIZATION_TIME 3 // in minutes - time for the SPS30 to stabilize before data readout
 #define SENSORS_MEASUREMENT_DELAY 135 // about a time to readout all used sensors in milliseconds (SPS30, HTU21D)
 
 // LoRaWAN settings - set the keys tegistred for the device 
