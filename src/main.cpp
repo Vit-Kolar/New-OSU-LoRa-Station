@@ -23,8 +23,9 @@ uint8_t allowDeepSleep = USE_HW_RTC ? ALLOW_DEEP_SLEEP : 0 ;                  //
   RTC_TYPE rtc;   // RTC object - define based on used module
 #endif
 
-
+#if DEBUG
 uint32_t joinTime, RX2End;
+#endif
 
 // main payload variables
 uint8_t payload[25];                  // payload array for data to be sent
@@ -33,9 +34,9 @@ uint8_t fport = 1;                   // fport for the data to be sent
 uint32_t waitAfterJoin = 30;         // in seconds
 
 
-uint32_t nextSlotEpoch = 0;           
+        
 
-// initialize LoRaWAN object - pin 8 is used for the RFM95 module
+//initialize LoRaWAN object - pin 8 is used for the RFM95 module
 SlimLoRa lora = SlimLoRa(8);
 
 //sensor variables
@@ -47,32 +48,39 @@ struct sps30_measurement m;
 uint16_t data_ready;
 int16_t ret;
 
-
+//slot variables
+uint32_t nextSlotEpoch = 0;   
 uint32_t lastSyncEpoch = 0;
 uint32_t lastSentSlot = 0;
+
+//time resync intervals in minutes
 uint16_t syncFailedResyncIntervalsInMinutes[8] = {0,5, 30, 60, 120, 300, 720, 1440}; 
 
-void  clearSessionEEPROM(); 
+//EEPROM Storage functions
+void clearSessionEEPROM(); 
 void loadConfigFromEEPROM();
 void saveConfigToEEPROM();
 void manageSessionKeyChange();
+
+//OTA config and report functions
 void processDownlink();
 void reportSettingsByUplink();
+
 //uplink formatters
 void saveToPayload(float data, uint8_t *payload, int position);
 void saveToPayload(sps30_measurement &data, uint8_t *payload, int position);
 uint16_t f2sflt16(float f);
-//timekeeping
+
+//time
 void synchronizeTime();
 uint32_t getTimeRequestTimestamp();
-
 void printDateTime(int y, int mo, int d, int h, int mi, int s);
-
 void waitUntilNextSlot();
 void checkForTimeResync();
 #if DEBUG
 void printCurrentTime();
 #endif
+
 // deepSleep
 volatile bool watchdogFired = false;
 ISR(WDT_vect) {
@@ -97,10 +105,10 @@ void setup(){
     #endif
    
     /*
-    // turn on the LED - Just for testing to mark the station :)*/
+    // turn on the LED - Just for testing to mark the station :)
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWrite(LED_BUILTIN, HIGH);
-    
+    */
 
     htu.begin();
 DBG_PRINTLN(F("HTU21D sensor initialized."));
@@ -120,7 +128,9 @@ DBG_PRINTLN(F("HTU21D sensor initialized."));
     {
   #endif // LORAWAN_KEEPSESSION
       DBG_PRINTLN(F("\nJoining..."));
-      joinTime = millis() / 1000;
+      #if DEBUG
+        joinTime = millis() / 1000;
+      #endif
       joinCounter++;
       lora.Begin();
       lora.Join();
@@ -422,26 +432,25 @@ uint32_t getTimeRequestTimestamp() {
   lora.LoRaWANreceived = 0;
   lora.TimeLinkCheck = 1; // Request time synchronization
   uint8_t emptyPayload[1] = {0}; // Empty payload for the request
-  DBG_PRINTLN("Sending request...");
-  lora.SendData(3, emptyPayload, 1); // Send the request port 3 has no formater setup 
-  DBG_PRINT("Time request sent");
-  /*const uint32_t TMO = 10000;       // timeout 10 s
-  uint32_t t0 = millis();
-  while (   !(lora.LoRaWANreceived & SLIMLORA_LNS_TIME_ANS)
-        && (millis() - t0 < TMO) ) {
-    delay(10);
-  }*/
 
+  DBG_PRINTLN("Sending request...");
+
+  lora.SendData(3, emptyPayload, 1); // Send the request port 3 has no formater setup 
+
+  DBG_PRINT("Time request sent");
   DBG_PRINT("LoRaWAN flags: ");
   DBG_PRINTLN_HEX(lora.LoRaWANreceived);
+
   if ((lora.LoRaWANreceived & 0x40) == 0x40) {
       ret = lora.epoch;
   }
+
   DBG_PRINT("GPS epoch: ");
   DBG_PRINTLN(lora.epoch);
   DBG_PRINT_CURRENT_TIME();
   DBG_PRINT("RAW epoch from network: ");
   DBG_PRINTLN(lora.epoch);
+
   return ret;
 }
 // check if the time resync is schadduled for now - if the last sync was more than realTimeResyncIntervalDays days ago
