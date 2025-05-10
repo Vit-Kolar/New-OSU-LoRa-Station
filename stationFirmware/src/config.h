@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define FIRMWARE_CONFIG_VERSION 1 //go back to 0 if mor than 254 (255 -> 0xff is cleared state) change every time you want new configuration to be used and saved to EEPROM!!!
+#define FIRMWARE_CONFIG_VERSION 1 //go back to 0 if more than 254 (255 -> 0xff is cleared state) change every time you want new configuration to be used and saved to EEPROM!!!
 #define DEBUG 0
 
 //IMPORTANT!!! Enable lora.LoRaWANreceived parameter for lora.timeLinkCheck 
@@ -34,7 +34,7 @@ const uint32_t GPS_TO_UNIX_OFFSET = 315964800UL;
 #define SPS_STABILIZATION_PREREADOUT_DELAY  5  // time in minutes for measurement to start, before data readout if sps30StopAfterReadout is true 
 #define SPS_STOP_AFTER_READOUT              1  // Stop measurement after data readout. If false, it will start sps30StabilizationPreReadoutDelay minutes before the next sendIntervalMinutes slot
 #define REALTIME_RESYNC_INTERVAL_DAYS       7  // in days - time resynchronisation interval for the real time
-#define OVERRIDE_TIME_SYNCHRONIZATION       0  // 0 = send daty synchronized with time, 1 = send data based just on time interval 
+#define OVERRIDE_TIME_SYNCHRONIZATION       0  // 0 = send data synchronized with time, 1 = send data based just on time interval 
 #define ALLOW_DEEP_SLEEP                    0  // 1 = allow deep sleep, 0 = do not allow deep sleep
 
 
@@ -54,7 +54,7 @@ const uint32_t GPS_TO_UNIX_OFFSET = 315964800UL;
 #define SPS30_DEFAULT_STABILIZATION_TIME 3 // in minutes - time for the SPS30 to stabilize before data readout
 #define SENSORS_MEASUREMENT_DELAY 135 // about a time to readout all used sensors in milliseconds (SPS30, HTU21D)
 
-// LoRaWAN settings - set the keys tegistred for the device 
+// LoRaWAN settings - set the keys registred for the device 
 #if LORAWAN_OTAA_ENABLED
 extern const uint8_t DevEUI[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 extern const uint8_t JoinEUI[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
@@ -72,9 +72,9 @@ const uint8_t DevAddr[4] = { 0x00, 0x00, 0x00, 0x00 };
   #define DBG_PRINTF(x, y) Serial.printf(x, y);
   #define DBG_PRINT(x) Serial.print(x);
   #define DBG_PRINT_DEC(x) Serial.print(x, DEC);
-  #define DBG_PRINTLN_DEC(x) Serial.print(x, DEC);
+  #define DBG_PRINTLN_DEC(x) Serial.println(x, DEC);
   #define DBG_PRINT_HEX(x) Serial.print(x, HEX);
-  #define DBG_PRINTLN_HEX(x) Serial.print(x, HEX);
+  #define DBG_PRINTLN_HEX(x) Serial.println(x, HEX);
   #define DBG_PRINTLN(x) Serial.println(x);
   #define DBG_FLUSH() Serial.flush();
   #define DBG_PRINT_CURRENT_TIME() printCurrentTime();
