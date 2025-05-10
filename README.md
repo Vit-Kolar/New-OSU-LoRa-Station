@@ -2,6 +2,7 @@
 
 This repository contains new firmware developed as part of my diploma thesis, intended to extend the functionality of the original measurement stations. The original firmware is available [here](https://github.com/torar9/OSU-LoRa-Station/tree/main/adafruit-feather).
 
+
 ## Key Features
 
 * **Measured Parameters**: The station is equipped to measure temperature and humidity using the HTU21D sensor. It also measures various particulate matter concentrations (PM1.0, PM2.5, PM4.0, PM10.0 mass concentration, and PN0.5, PN1.0, PN2.5, PN4.0, PN10.0 number concentration, along with typical particle size) using the SPS30 sensor.
@@ -136,3 +137,60 @@ The firmware implements several mechanisms for power saving:
 ### Deep Sleep Requirements
 
 Deep sleep mode is only available if a hardware RTC is used (`USE_HW_RTC` set to `1` in `config.h`). If no hardware RTC is present, deep sleep will be automatically disabled, even if enabled via OTA configuration.
+
+## Tools
+
+The repository includes several tools to assist with data processing and RTC synchronization via serial. These tools can be helpful for further development and debugging.
+ 
+Below is an overview of the available tools:
+### 1. **CSV to Excel Converter**
+- **File:** [tools/convertData/CSVtoXLS.py](https://github.com/Vit-Kolar/New-OSU-LoRa-Station/blob/master/tools/convertData/CSVtoXLS.py)
+- **Description:** Converts a CSV file with uplinks from the DB server to an Excel file (`.xlsx`), while removing the `raw_json` column.
+- **Usage:**
+  1. Place your CSV file in the same directory as the script and name it `data.csv` (or modify the script to use a different file name).
+  2. Run the script using Python:
+     ```bash
+     python CSVtoXLS.py
+     ```
+  3. The output Excel file (`data.xlsx`) will be created in the same directory (or modify the script to change the output file name).
+- **Dependencies:** Requires the [pandas](https://pypi.org/project/pandas/) and [openpyxl](https://pypi.org/project/openpyxl/) Python libraries.
+
+
+### 2. **Set RTC Time via Serial**
+- **File:** [tools/SetTimeSerial/SetTimeSerial.ino](https://github.com/Vit-Kolar/New-OSU-LoRa-Station/blob/master/tools/SetTimeSerial/SetTimeSerial.ino)
+- **Description:** Arduino sketch for setting the time on an RTC module (e.g., DS3231) via serial input.
+- **Usage:**
+  1. Upload the sketch to an Arduino board connected to the RTC module.
+  2. Open the Serial Monitor in the Arduino IDE and input the time in the following format:
+     ```
+     YYYY MM DD HH MM SS
+     ```
+  3. The RTC will be adjusted to the provided time, and the current time will be printed to the Serial Monitor.
+- **Purpose:** Useful for initial setup or manual adjustment of the RTC time.
+
+
+### **Firmware Integration**
+The station firmware includes this functionality for manually synchronizing the RTC (Real-Time Clock) via serial input. This feature can be helpful during the initial setup, when network-based time synchronization is unavailable, for testing and development purposes.
+
+- **Usage:**
+  1. Open the `config.h` file in the firmware source code.
+  2. Make sure `USE_HW_RTC` and `DEBUG` are set to `1`.
+  3. Enable one or both of the following options by setting them to `1`: `SET_RTC_FROM_SERIAL` and `TEST_RTC_VS_LORA_TIME`.
+  4. The controller will prompt you to enter the time via serial by blinking an LED for a period of 20 seconds.  
+     For this purpose, use tool **3. Synchronize RTC with PC Time**.
+
+
+
+### 3. **Synchronize RTC with PC Time**
+- **File:** [tools/RTCsync/syncFromPC.py](https://github.com/Vit-Kolar/New-OSU-LoRa-Station/blob/master/tools/RTCsync/syncFromPC.py)
+- **Description:** Python script that sends the current PC time to the microcontroller in the same format expected by the tool **2. Set RTC Time via Serial**. This allows for automatic synchronization of the RTC module over a serial connection.
+- **Usage:**
+  1. Connect your RTC module to a microcontroller and ensure it is ready to receive time data via serial.
+  2. Update the `SERIAL_PORT` variable in the script to match your serial port (e.g., `COM4`).
+  3. Run the script using Python:
+     ```bash
+     python syncFromPC.py
+     ```
+  4. The script will send the current PC time to the controller in the format `YYYY MM DD HH MM SS` and display the serial output in the terminal.
+- **Dependencies:** Requires the [pyserial](https://pypi.org/project/pyserial/) Python library.
+- **Purpose:** Automates the process of setting the RTC to the current PC time, ensuring accurate synchronization.
