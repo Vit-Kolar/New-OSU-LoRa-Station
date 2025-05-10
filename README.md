@@ -1,7 +1,10 @@
-# New-OSU-LoRa-Station
+# New OSU LoRa Station
 
-This repository contains new firmware developed as part of my diploma thesis, intended to extend the functionality of the original measurement stations. The original firmware is available [here](https://github.com/torar9/OSU-LoRa-Station/tree/main/adafruit-feather).
+This repository contains new firmware developed as part of my diploma thesis, intended to extend the functionality of the original measurement stations. The original firmware is available [here](https://github.com/torar9/OSU-LoRa-Station).
 
+This firmware uses the [SlimLoRa](https://github.com/clavisound/SlimLoRa) library, enabling additional and extended features due to its minimal memory footprint.
+This choice addresses the memory limitations of the Adafruit Feather 32u4 board used in the stations.
+The firmware now includes time synchronization between stations. The introduction of this key feature solves the issue of unsynchronized measurements between stations.
 
 ## Key Features
 
@@ -141,7 +144,7 @@ Deep sleep mode is only available if a hardware RTC is used (`USE_HW_RTC` set to
 ## Tools
 
 The repository includes several tools to assist with data processing and RTC synchronization via serial. These tools can be helpful for further development and debugging.
- 
+
 Below is an overview of the available tools:
 ### 1. **CSV to Excel Converter**
 - **File:** [tools/convertData/CSVtoXLS.py](https://github.com/Vit-Kolar/New-OSU-LoRa-Station/blob/master/tools/convertData/CSVtoXLS.py)
