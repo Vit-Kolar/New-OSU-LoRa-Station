@@ -12,7 +12,8 @@
 #define LORAWAN_OTAA_ENABLED    1
 #define LORAWAN_KEEP_SESSION    1 // Store the session data to EEPROM
 
-
+// Set data rate (LoRa SF + BW combination) – maps to SlimLoRa.h macro
+#define DATA_RATE SF10BW125  //SF7BW125, SF9BW125, SF10BW125, SF11BW125, SF12BW125 when SF12BW125 have max range, but lowest data rate
 
 //Timekeeping
 const uint32_t GPS_TO_UNIX_OFFSET = 315964800UL;

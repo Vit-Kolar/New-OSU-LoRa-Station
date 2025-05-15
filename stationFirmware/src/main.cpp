@@ -34,8 +34,6 @@ uint8_t fport = 1;                   // fport for the data to be sent
 uint32_t waitAfterJoin = 30;         // in seconds
 
 
-        
-
 //initialize LoRaWAN object - pin 8 is used for the RFM95 module
 SlimLoRa lora = SlimLoRa(8);
 
@@ -92,8 +90,7 @@ void setupWatchdog(uint8_t timeout);
 void setup(){
   #if DEBUG
     Serial.begin(9600);
-    while (!Serial)
-      ; // don't start unless we have serial connection
+    while (!Serial); // don't start unless we have serial connection
     DBG_PRINTLN("Starting");
   #endif
     manageSessionKeyChange();
@@ -111,13 +108,16 @@ void setup(){
     */
 
     htu.begin();
-DBG_PRINTLN(F("HTU21D sensor initialized."));
+    DBG_PRINTLN(F("HTU21D sensor initialized."));
     delay(1000);
+
     lora.Begin();
     lora.Join(); // Join the network;
     lora.SetPower(14);
-    lora.SetDataRate(SF10BW125); //SF7BW125, SF9BW125, SF10BW125, SF11BW125, SF12BW125 when SF12BW125 have max range, but lowest data rate
+    lora.SetDataRate(DATA_RATE); 
+
     DBG_PRINTLN(lora.GetHasJoined() ? "OK" : "NO");
+    
     uint8_t joinCounter = 0;
   #if LORAWAN_OTAA_ENABLED
   #if LORAWAN_KEEP_SESSION
