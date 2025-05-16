@@ -14,11 +14,11 @@ The firmware now supports time synchronization with LoRaWAN network. The introdu
 * **Time Synchronization**: Remote time synchronization using time timestamps from the TTN (The Things Network) network via DeviceTimeReq MAC frames. Periodic resynchronization is configurable.
 * **Regular Data Transmission Intervals**: Data is sent at configurable intervals, with a minimum of 5 minutes due to radio spectrum limitations. Option to synchronize transmission with real time.
 * **Power Saving**: Ability to enter deep sleep mode between data transmission cycles (requires hardware RTC). Option to stop the SPS30 sensor fan to reduce power consumption.
-* **Remote Configuration (OTA)**: Modification of operational parameters via downlink messages from the LoRaWAN network. Configuration is stored in EEPROM for persistence.
+* **Remote Configuration (Over-The-Air)**: Modification of operational parameters via downlink messages from the LoRaWAN network. Configuration is stored in EEPROM for persistence.
 
 ## Configuration
 
-The basic firmware configuration is done in the `config.h` file. Here you will find definitions for LoRaWAN settings, timing, sensors, and OTA configuration.
+All necessary configuration is in the `config.h` file. This includes LoRaWAN settings (including activation mode, keys and transmission data rate), timing (intervals and synchronization), hardware configuration (RTC and sensors), debug options, and OTA configurable parameters that can be changed remotely via downlink messages.
 
 **Important Settings in `config.h`:**
 
@@ -26,6 +26,7 @@ The basic firmware configuration is done in the `config.h` file. Here you will f
 * `DEBUG`: Enable/disable debug output on the serial port.
 * `LORAWAN_OTAA_ENABLED`: Enable OTAA mode. Set to `1` for OTAA, `0` for ABP.
 * `LORAWAN_KEEP_SESSION`: Store session data to EEPROM when using OTAA.
+* `DATA_RATE`: Sets the LoRa data rate (spreading factor and bandwidth combination). Possible values from the SlimLoRa library (v0.7.5): {`SF7BW250` (only for 868.3 MHz), `SF7BW125`, `SF9BW125`, `SF10BW125`, `SF11BW125`, `SF12BW125`} Higher [spreading factors](https://www.thethingsnetwork.org/docs/lorawan/spreading-factors) (SF) provide longer range but lower data rates.
 * `DevEUI`, `JoinEUI`, `AppKey`: Keys for OTAA.
 * `NwkSKey`, `AppSKey`, `DevAddr`: Keys and address for ABP (only if `LORAWAN_OTAA_ENABLED` is `0`).
 * `TIMEZONE_OFFSET_HOURS`: Time offset from UTC in hours.
